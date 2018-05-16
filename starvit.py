@@ -7,6 +7,7 @@ def starvit(ip_subnet="192.168.27.",
             start_ip=100,
             end_ip=254,
             server_id="192.168.27.254",
+            timeout=0.2,
             layer2_broadcast = "ff:ff:ff:ff:ff:ff"):
     # Stops scapy from checking return packet originating from any packet that we have sent out
     conf.checkIPaddr = False    
@@ -32,7 +33,7 @@ def starvit(ip_subnet="192.168.27.",
                                           "end"])
         sendp(dhcp_request)
         print("Requesting: " + ip_subnet + str(ip) + "\n")
-        time.sleep(0.2)
+        time.sleep(timeout)
 
             
 if __name__=="__main__":
@@ -54,6 +55,9 @@ if __name__=="__main__":
     parser.add_argument('-server_id', required=False, 
                         help="DHCP server id, example: 192.168.27.254")
 
+    parser.add_argument('-timeout', type=float, default=0.2, required=False, 
+                        help="seconds to wait between a request and another. example -timeout 0.2")
+
     # parser.add_argument('-stdout', nargs=1, help="print output, \
     # json or radcheck tuple", required=False)
 
@@ -63,4 +67,5 @@ if __name__=="__main__":
     starvit(args.subnet,
             args.start,
             args.end,
-            args.server_id)
+            args.server_id,
+            args.timeout)
