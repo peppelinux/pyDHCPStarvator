@@ -6,8 +6,7 @@ This tool was not created for doing network attacks but like a strategy to exaus
 ### Usage
 ````
 usage: starvit.py [-h] -subnet SUBNET [-start N] [-end N]
-                  [-server_id SERVER_ID]
-
+                  [-server_id SERVER_ID] [-timeout TIMEOUT]
 
 sudo python starvit.py -subnet 192.168.27. -start 120 -end 150
 
