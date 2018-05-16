@@ -22,6 +22,12 @@ All the other DHCP server in the l2 broadcast will get something similar in thei
 Wed May 16 17:31:35 2018 daemon.info dnsmasq-dhcp[31796]: DHCPNAK(br-lan) 192.168.27.135 30:63:3a:33:38:3a wrong server-ID
 ````
 
+## Hints
+````
+# tcpdump activity sniffing
+tcpdump -i $ifname -n 'port 67 and port 68'
+````
+
 ## TODO
 
 - better MAC randomization;
