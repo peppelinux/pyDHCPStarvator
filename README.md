@@ -27,6 +27,9 @@ Wed May 16 17:31:35 2018 daemon.info dnsmasq-dhcp[31796]: DHCPNAK(br-lan) 192.16
 # tcpdump activity sniffing
 tcpdump -i $ifname -n 'port 67 and port 68'
 ````
+### License
+
+DHCPStarvator is made with by Giuseppe De Marco and it's released under the GPL 3 license.
 
 ### TODO
 
