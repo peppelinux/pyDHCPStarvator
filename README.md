@@ -28,7 +28,7 @@ tcpdump -i $ifname -n 'port 67 and port 68'
 ````
 ### License
 
-DHCPStarvator is made with by Giuseppe De Marco and it's released under the GPL 3 license.
+DHCPStarvator is made by Giuseppe De Marco and it's released under the GPL 3 license.
 
 ### Todo
 
