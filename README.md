@@ -1,6 +1,6 @@
 # pyDHCPStarvator
 
-This is a Scapy python program that can exahusts an entire DHCP pool.
+This is a Scapy python program that can run out an entire DHCP pool.
 This tool was not created for doing network attacks but like a strategy to exaust a DHCP Rogue pool when security-port and dhcp-snoop features are not available in your network equipments.
 
 ### Usage
