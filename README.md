@@ -24,9 +24,9 @@ Wed May 16 17:31:35 2018 daemon.info dnsmasq-dhcp[31796]: DHCPNAK(br-lan) 192.16
 
 ## TODO
 
-- better MAC randomization
-- hostname randomization using a wordlist generator with laptop brandname and other popular things
-- pleasae open an issue and suggest :)
+- better MAC randomization;
+- hostname randomization using a wordlist generator, with laptop brandnames and other popular things;
+- please open an issue and suggest :)
 
 #### License
 Copyright (c) 2018 giuseppe.demarco@unical.it
