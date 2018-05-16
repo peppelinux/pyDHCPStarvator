@@ -39,4 +39,4 @@ DHCPStarvator is made by Giuseppe De Marco and it's released under the GPL 3 lic
 - please open an issue and suggest :)
 
 ### Special thanks
-To Daniele Albrizio (#https://github.com/speedj) for given a name to an idea ;)
+To [Daniele Albrizio] (#https://github.com/speedj) for given a name to an idea ;)
