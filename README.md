@@ -30,7 +30,7 @@ tcpdump -i $ifname -n 'port 67 and port 68'
 
 DHCPStarvator is made with by Giuseppe De Marco and it's released under the GPL 3 license.
 
-### TODO
+### Todo
 
 - better MAC randomization;
 - hostname randomization using a wordlist generator, with laptop brandnames and other popular things;
