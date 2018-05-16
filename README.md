@@ -11,7 +11,7 @@ usage: starvit.py [-h] -subnet SUBNET [-start N] [-end N]
 sudo python starvit.py -subnet 192.168.27. -start 120 -end 150
 
 # for specific attack just add a server_id
-sudo python starvit.py -subnet 192.168.27. -start 120 -end 150 -server_id 192.168.27.254
+sudo python starvit.py -subnet 192.168.27. -start 10 -end 253 -server_id 192.168.27.254
 ````
 
 #### -server_id
