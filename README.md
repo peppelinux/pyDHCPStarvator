@@ -69,6 +69,7 @@ DHCPStarvator is made by Giuseppe De Marco and it's released under the GPL 3 lic
 - subprocess parallelization;
 - background sniffer that intercept unauthoritative rogue's DHCP NAK and start starvation over it!
 - background unsolicitated DHCP requests
+- DHCP Server whitelist (do not starvate them)
 - please open an issue and suggest :)
 
 ### Resources
