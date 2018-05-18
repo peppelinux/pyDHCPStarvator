@@ -68,6 +68,7 @@ DHCPStarvator is made by Giuseppe De Marco and it's released under the GPL 3 lic
 - hostname randomization using a wordlist generator, with laptop brandnames and other popular things;
 - subprocess parallelization;
 - background sniffer that intercept unauthoritative rogue's DHCP NAK and start starvation over it!
+- background unsolicitated DHCP requests
 - please open an issue and suggest :)
 
 ### Resources
