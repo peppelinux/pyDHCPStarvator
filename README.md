@@ -18,8 +18,9 @@ It works better with python2
 ### Usage
 ````
 usage: starvit.py [-h] -subnet SUBNET [-start N] [-end N]
-                  [-server_id SERVER_ID] [-dst_mac DST_MAC] [-timeout TIMEOUT]
-                  [-debug DEBUG]
+                  [-server_id SERVER_ID] [-random_hostnames]
+                  [-dst_mac DST_MAC] [-timeout TIMEOUT] [-debug DEBUG]
+
 
 sudo python starvit.py -subnet 192.168.27. -start 120 -end 150
 
@@ -53,10 +54,18 @@ python release_ip.py -src_mac 66:36:3a:37:31:3a -src_ip 192.168.1.93 -dst_mac 08
 
 ````
 
+### Results
+![example](images/example.png)
+An OpenWRT DHCP server used as victim.
+Someone fake client request was forged with "-random_hostnames" option, someone not.
+
 ### Hints
 ````
 # tcpdump activity sniffing
 tcpdump -i $ifname -n 'port 67 and port 68'
+
+# dhcp discover
+nmap --script broadcast-dhcp-discover -e eth0
 ````
 ### License
 
@@ -64,16 +73,17 @@ DHCPStarvator is made by Giuseppe De Marco and it's released under the GPL 3 lic
 
 ### Todo
 
-- better MAC randomization;
-- hostname randomization using a wordlist generator, with laptop brandnames and other popular things;
-- subprocess parallelization;
-- background sniffer that intercept unauthoritative rogue's DHCP NAK and start starvation over it!
-- background unsolicitated DHCP requests
+- confiurable MAC randomization (arguments);
+- background sniffer that intercept unauthoritative rogue's DHCP NAK and start starvation of source DHCP endpoint
+- background unsolicitated DHCP requests, ignore authoritative DHCP and starve all the other DHCPs
 - DHCP Server whitelist (do not starvate them)
 - please open an issue and suggest :)
 
 ### Resources
 
+- http://scapy.readthedocs.io/en/latest/#sniffing
+- https://phaethon.github.io/scapy/api/
+- https://blog.jasonantman.com/2010/04/dhcp-debugging-and-handy-tcpdump-filters/
 - https://www.whitewinterwolf.com/posts/2017/10/30/dhcp-exploitation-guide/
 - https://github.com/foreni-packages/dhcpig
 
