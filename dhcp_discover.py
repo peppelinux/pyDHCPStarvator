@@ -1,10 +1,13 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # Giuseppe De Marco
+
+# suppress "WARNING: No route found for IPv6 destination :: (no default route?)"
+import logging
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 from scapy.all import *
 
-def discover(dst_mac="ff:ff:ff:ff:ff:ff",
-             ):
+def dhcp_discover(dst_mac="ff:ff:ff:ff:ff:ff", debug=False):
     myxid = random.randint(1, 900000000)
     src_mac = get_if_hwaddr(conf.iface)
     bogus_mac_address = RandMAC()
@@ -16,8 +19,7 @@ def discover(dst_mac="ff:ff:ff:ff:ff:ff",
                 ("lease_time",10000),
                 # ("hostname", hostname),
                 ("end",'00000000000000')
-            ]
-    
+              ]
     dhcp_discover = Ether(src=src_mac,dst=dst_mac)\
                     /IP(src="0.0.0.0",dst="255.255.255.255")\
                     /UDP(sport=68,dport=67)\
@@ -25,9 +27,9 @@ def discover(dst_mac="ff:ff:ff:ff:ff:ff",
                                    xid=myxid,
                                    flags=0xFFFFFF)\
                     /DHCP(options=options)
-    
     sendp(dhcp_discover)
-    #print('%r'%dhcp_discover)
+    if debug: 
+        dhcp_discover.show()
 
             
 if __name__=="__main__":
@@ -37,7 +39,10 @@ if __name__=="__main__":
                         help="local network interface")
     parser.add_argument('-pfilter', required=False, default='arp',
                         help="filter")
+    parser.add_argument('-debug', required=False, action="store_true", 
+                        help="interface to start listen to")
     args = parser.parse_args()
     conf.iface = args.i
     # run!
-    discover()
+    dhcp_discover(dst_mac="ff:ff:ff:ff:ff:ff",
+                  debug=args.debug)

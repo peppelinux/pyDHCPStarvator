@@ -1,5 +1,11 @@
-from scapy.all import *
+# suppress "WARNING: No route found for IPv6 destination :: (no default route?)"
+import logging
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
+import os
+
+from scapy.all import *
+from arp_ping import get_mac
 # def show_dhcpoffer(pkt):
 
 global _DEBUG    
@@ -16,18 +22,21 @@ def pkt_callback(pkt):
             
             6 : nak
     """
+    
     if _DEBUG: pkt.show() # debug statement
-    #print(pkt.summary())
-    # print(pkt.lastlayer().fields['options'][0][1])
+
     if pkt.lastlayer().fields['options'][0][1] == 3:
-        print ('DHCP REQUEST from %s' % pkt.fields.get('src'))
-    if pkt.lastlayer().fields['options'][0][1] == 6:
+        router_ip = pkt.fields.get('src')
+        print ('DHCP REQUEST from %s' % router_ip)
+    
+    elif pkt.lastlayer().fields['options'][0][1] == 6:
         router_ip = pkt.lastlayer().fields['options'][1][1] 
-        print ('DHCP NAK from %s' % router_ip)
+        print ("DHCP NAK from: {} -> [{}]".format(router_ip, get_mac(router_ip, net_if)))
+    
     elif pkt.lastlayer().fields['options'][0][1] == 2:
         router_ip = pkt.lastlayer().fields['options'][7][1] 
-        print ('DHCP OFFER from %s' % router_ip)
-
+        print("DHCP OFFER from: {} [{}]".format(router_ip, get_mac(router_ip, net_if)))
+    
 def listen(iface, pfilter):
     # store argument must be set to 0 for the prn callback to be invoked
     sniff(iface=iface, filter=pfilter, prn=pkt_callback, store=0)
@@ -50,6 +59,10 @@ if __name__=="__main__":
         _DEBUG = True
     print ("Start DHCP listener on interface '%s' with filter '%s'" % (args.i, args.pfilter))
     # run!
+    
+    global net_if 
+    net_if = args.i
+    
     listen(args.i,
            args.pfilter
           )

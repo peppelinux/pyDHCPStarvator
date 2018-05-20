@@ -1,5 +1,9 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # Giuseppe De Marco
+
+# suppress "WARNING: No route found for IPv6 destination :: (no default route?)"
+import logging
+logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
 from scapy.all import *
 
@@ -38,7 +42,7 @@ def starvit(ip_subnet="192.168.1.",
         if debug: print('%r'%dhcp_request)
         time.sleep(timeout)
 
-            
+
 if __name__=="__main__":
     import argparse
     parser = argparse.ArgumentParser()
@@ -70,7 +74,7 @@ if __name__=="__main__":
     parser.add_argument('-timeout', type=float, default=0.2, required=False, 
                         help="seconds to wait between a request and another. example -timeout 0.2")
 
-    parser.add_argument('-debug', type=int, default=0,
+    parser.add_argument('-debug', action='store_true',
                         help="print packets", required=False)
 
     args = parser.parse_args()
