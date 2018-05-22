@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Giuseppe De Marco
 
 # suppress "WARNING: No route found for IPv6 destination :: (no default route?)"
@@ -13,12 +13,12 @@ def dhcp_discover(dst_mac="ff:ff:ff:ff:ff:ff", debug=False):
     bogus_mac_address = RandMAC()
     options = [
                 ("message-type", "discover"),
-                ("param_req_list", chr(1),chr(121),chr(3),chr(6),chr(15),chr(119),chr(252),chr(95),chr(44),chr(46)),
+                #("param_req_list", chr(1),chr(121),chr(3),chr(6),chr(15),chr(119),chr(252),chr(95),chr(44),chr(46)),
                 ("max_dhcp_size",1500),
-                ("client_id", chr(1), mac2str(bogus_mac_address)),
+                #("client_id", chr(1), mac2str(bogus_mac_address)),
                 ("lease_time",10000),
                 # ("hostname", hostname),
-                ("end",'00000000000000')
+                ("end",bytes('00000000000000', encoding='ascii'))
               ]
     dhcp_discover = Ether(src=src_mac,dst=dst_mac)\
                     /IP(src="0.0.0.0",dst="255.255.255.255")\

@@ -18,7 +18,7 @@ def random_uid():
 
 
 def random_hostname(wordlist='wordlist.txt', sep='-'):
-    with open(wordlist) as wd:
+    with open(wordlist, encoding='UTF-8') as wd:
         words = [i.replace('\n', '') for i in wd.readlines()]
     
     rchoice = random.choice(words)

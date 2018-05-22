@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 # suppress "WARNING: No route found for IPv6 destination :: (no default route?)"
 import logging
@@ -27,4 +27,6 @@ if __name__ == '__main__':
     parser.add_argument('-i', '--interface', type=str, dest='interface', default='wlan0',
                         help='Network interface to use')
     args = parser.parse_args()
-    print("{} = {}".format(args.victim_ip, get_mac(args.victim_ip, args.interface)))
+    
+    fetched_mac = get_mac(args.victim_ip, args.interface)
+    if fetched_mac: print("{} = {}".format(args.victim_ip, fetched_mac ))

@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 # suppress "WARNING: No route found for IPv6 destination :: (no default route?)"
 import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
@@ -31,7 +33,7 @@ def pkt_callback(pkt):
     
     elif pkt.lastlayer().fields['options'][0][1] == 6:
         router_ip = pkt.lastlayer().fields['options'][1][1] 
-        print ("DHCP NAK from: {} -> [{}]".format(router_ip, get_mac(router_ip, net_if)))
+        print ("DHCP NAK from: {} [{}]".format(router_ip, get_mac(router_ip, net_if)))
     
     elif pkt.lastlayer().fields['options'][0][1] == 2:
         router_ip = pkt.lastlayer().fields['options'][7][1] 

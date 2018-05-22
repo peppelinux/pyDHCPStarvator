@@ -17,8 +17,7 @@ def release_ip(src_mac,
                    /BOOTP(ciaddr=src_ip,chaddr=[mac2str(src_mac)],xid=rand_xid,)\
                    /DHCP(options=[("message-type","release"),
                                   ("server_id",dst_ip),
-                                  ("client_id",chr(1),
-                                  mac2str(src_mac)),
+                                  ("client_id", mac2str(src_mac)),
                                   "end"])
     sendp(dhcp_release)
     print("Requesting release for: %s (%s)" % (src_ip, src_mac))
