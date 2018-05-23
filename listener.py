@@ -64,7 +64,7 @@ if __name__=="__main__":
     
     global net_if 
     net_if = args.i
-    
+
     listen(args.i,
            args.pfilter
           )

@@ -37,8 +37,6 @@ if __name__=="__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', required=True, 
                         help="local network interface")
-    parser.add_argument('-pfilter', required=False, default='arp',
-                        help="filter")
     parser.add_argument('-debug', required=False, action="store_true", 
                         help="interface to start listen to")
     args = parser.parse_args()

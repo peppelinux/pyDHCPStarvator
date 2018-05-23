@@ -10,7 +10,7 @@ from scapy.all import *
 
 def get_mac(ip, interface):
     result = ''
-    arp_request = Ether(dst="ff:ff:ff:ff:ff:ff")/ARP(pdst=ip)
+    arp_request = Ether(src=get_if_hwaddr(interface),dst="ff:ff:ff:ff:ff:ff")/ARP(pdst=ip)
     ans, unans = srp(arp_request, timeout=2, iface=interface, verbose=False)
     if ans:
         first_response = ans[0]
