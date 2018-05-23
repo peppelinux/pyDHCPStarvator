@@ -5,30 +5,49 @@ This tool was not created for doing network attacks but like a strategy to exaus
 
 ### Requirements
 ````
-# python2
-apt install python2-pip python-dev
-pip install scapy
-
-# python3
 apt install python3-dev python3-pip
 pip3 install scapy-python3
+pip3 install netaddr
 ````
 It was migrated from python2 to python3, hopefully the right thing!
 
 ### Usage
 ````
-usage: starvit.py [-h] -subnet SUBNET [-start N] [-end N]
+usage: starvit.py [-h] -i I -net NET [-start N] [-end N] [-rep N]
                   [-server_id SERVER_ID] [-random_hostnames]
                   [-dst_mac DST_MAC] [-timeout TIMEOUT] [-debug]
 
+optional arguments:
+  -h, --help            show this help message and exit
+  -i I                  local network interface
+  -net NET              /24 subnet, example: -subnet 192.168.27.0/24
+  -start N              start ip to request
+  -end N                how many request will be done
+  -rep N                repetition, sometime packet get lost. Default: 3
+                        requests per ip
+  -server_id SERVER_ID  DHCP server id, example: 192.168.27.254
+  -random_hostnames     random client hostnames, othrewise client's hostname
+                        will be: ?
+  -dst_mac DST_MAC      Destination DHCP MAC address, default:
+                        ff:ff:ff:ff:ff:ff
+  -timeout TIMEOUT      seconds to wait between a request and another. example
+                        -timeout 0.2
+  -debug                print packets
+````
 
-sudo python starvit.py -subnet 192.168.27. -start 120 -end 150
+##### usage examples
+````
+# starvation on entire network class
+sudo python3 starvit.py -i eth2  -net 192.168.0.0/16  -dst_mac 08:00:27:7c:f9:41 -t 0.05
+
+# starvation on selected ip range
+sudo python3 starvit.py -i eth2  -net 192.168.1.0/24 -start 92 -end 100 -dst_mac 08:00:27:7c:f9:41
 
 # just add a server_id as a specific target
-sudo python starvit.py -subnet 192.168.27. -start 10 -end 253 -server_id 192.168.27.254
+sudo python3 starvit.py -net 192.168.1.0/24 -start 10 -end 253 -server_id 192.168.27.254
 
 # specify server by its MAC address and print packets to stdout
-python starvit.py -subnet 192.168.1. -start 80 -end 100 -dst_mac 08:00:27:7C:F9:41 -debug
+sudo python3 starvit.py -net 192.168.1.0/24 -start 80 -end 100 -dst_mac 08:00:27:7C:F9:41 -debug
 
 
 ````
@@ -57,8 +76,8 @@ python release_ip.py -src_mac 66:36:3a:37:31:3a -src_ip 192.168.1.93 -dst_mac 08
 ````
 
 ### Send a DHCP discover and listen for event
-A listener could be also executed to run a function callback for every packet sniffed.
-For example we could send a gratuitous DHCP DISCOVER to sniff DHCP OFFER from rogue DHCP servers, then run a starvation over them.
+A listener could also be executed to run a function callback for every packet sniffed.
+For example we could send a gratuitous DHCP DISCOVER and listen for DHCP OFFER from rogue DHCP servers.
 
 ````
 # DHCP DISCOVER
@@ -72,6 +91,35 @@ DHCP OFFER from: 10.21.0.254 [d4:ca:6d:e6:6a:d7]
 DHCP OFFER from: 192.168.1.1 [08:00:27:7c:f9:41]
 DHCP OFFER from: 192.168.1.1 [08:00:27:7c:f9:41]
 ````
+
+listener.py can also be runned in starvation attack mode (subprocess).
+If a DHCP-OFFER has been sniffed it will automatically starvate that DHCP.
+It can also whitelists one or more DHCP and attack only the ROGUE DHCP.
+
+
+In this example 10.21.0.254 is whitelisted, attack will only run 
+against 192.168.1.1.
+````
+python3 listener.py -i eth2 -starvation-attack -starvation-exclude d4:ca:6d:e6:6a:d7
+
+Start DHCP listener on interface 'eth2' with filter 'port 68 and port 67'
+DHCP OFFER from: 10.21.0.254 [d4:ca:6d:e6:6a:d7]
+DHCP OFFER from: 192.168.1.1 [08:00:27:7c:f9:41]
+starting starvation on 08:00:27:7c:f9:41, 192.168.1.1/24
+** python3 starvit.py -i eth2 -net 192.168.1.1/24 -dst_mac 08:00:27:7c:f9:41
+DHCP OFFER from: 192.168.1.1 [08:00:27:7c:f9:41]
+starting starvation on 08:00:27:7c:f9:41, 192.168.1.1/24
+** python3 starvit.py -i eth2 -net 192.168.1.1/24 -dst_mac 08:00:27:7c:f9:41
+````
+
+To solicitate DHCP-OFFER we craft DHCP-REQUEST packets
+````
+python2 dhcp_discover.py -i eth2
+
+#or
+nmap --script broadcast-dhcp-discover -e eth0
+````
+
 
 ### Results
 ![example](images/example.png)
@@ -89,6 +137,16 @@ tcpdump -i $ifname -n 'port 67 and port 68'
 # dhcp discover
 nmap --script broadcast-dhcp-discover -e eth0
 ````
+````
+# dhcp leases flush
+# openwrt
+echo "" >  /tmp/dhcp.leases
+
+# debian
+echo "" >  /var/lib/dhcp3/dhcp.leases
+
+````
+
 ### License
 
 DHCPStarvator is made by Giuseppe De Marco and it's released under the GPL 3 license.
