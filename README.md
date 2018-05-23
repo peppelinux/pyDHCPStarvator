@@ -153,10 +153,10 @@ DHCPStarvator is made by Giuseppe De Marco and it's released under the GPL 3 lic
 
 ### Todo
 
-- confiurable MAC randomization (arguments);
-- background sniffer that intercept unauthoritative rogue's DHCP NAK and start starvation of source DHCP endpoint
-- background unsolicitated DHCP requests, ignore authoritative DHCP and starve all the other DHCPs
-- DHCP Server whitelist (do not starvate them)
+- configurable MAC randomization (arguments);
+
+
+
 - please open an issue and suggest :)
 
 ### Resources
