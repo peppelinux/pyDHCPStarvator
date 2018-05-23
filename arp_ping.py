@@ -22,11 +22,11 @@ def get_mac(ip, interface):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('victim_ip', type=str,
+    parser.add_argument('ip', type=str,
                         help='IP of the host you want to arp ping')
     parser.add_argument('-i', '--interface', type=str, dest='interface', default='wlan0',
                         help='Network interface to use')
     args = parser.parse_args()
     
-    fetched_mac = get_mac(args.victim_ip, args.interface)
-    if fetched_mac: print("{} = {}".format(args.victim_ip, fetched_mac ))
+    fetched_mac = get_mac(args.ip, args.interface)
+    if fetched_mac: print("{} = {}".format(args.ip, fetched_mac ))
