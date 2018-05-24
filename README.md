@@ -153,11 +153,8 @@ DHCPStarvator is made by Giuseppe De Marco and it's released under the GPL 3 lic
 
 ### Todo
 
-- configurable MAC randomization (arguments);
-
-
-
-- please open an issue and suggest :)
+- configurable MAC randomization (I found Scapy's RandMAC too much recognizable!);
+- please open issues/ticket and suggest!
 
 ### Resources
 
