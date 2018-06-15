@@ -150,9 +150,9 @@ echo "" >  /var/lib/dhcp3/dhcp.leases
 As previosly described a DHCP starvation is commonly prevented with:
 
 - port-security, it permits to lock a network switch's physical port to a restricted number of mac addresses. A dhcp starvation cannot spoof mac addresses in this configuration.
-- dnc-snoop, a switch blocks port 67 and 68 coming from unauthoritative DHCP servers. This commonly prevents rogue DHCP activities.
+- dnc-snoop, a network switch will reject DHCP packets on port 67 and 68 coming from unauthoritative DHCP servers. This commonly prevents rogue DHCP activities.
 
-If any of these are not available the only solution is to arping every dhcp request src and, if any response come back, remove that DHCP lease from DHCP server (see previous chapter). A for loop on every dhcp.leases file's row could execute an arping, if it will be negative that row should be removed! 
+If any of these are not available the only solution is to arping every dhcp request src and, if any response come back, remove that DHCP lease from DHCP server (see previous chapter). A FOR loop on every dhcp.leases file's row could execute an arping to check the real existence of a client, if it will be negative that row should be removed and the dhcp lease released.
 
 ### License
 
