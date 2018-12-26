@@ -9,7 +9,7 @@ apt install python3-dev python3-pip
 pip3 install scapy-python3
 pip3 install netaddr
 ````
-It was migrated from python2 to python3, hopefully the right thing!
+It was migrated from python2 to python3, if you need a runnable python2 version you can use the branch named **python2**.
 
 ### Usage
 ````
@@ -152,7 +152,7 @@ As previosly described a DHCP starvation is commonly prevented with:
 - port-security, it permits to lock a network switch's physical port to a restricted number of mac addresses. A dhcp starvation cannot spoof mac addresses in this configuration.
 - dnc-snoop, a network switch will reject DHCP packets on port 67 and 68 coming from unauthoritative DHCP servers. This commonly prevents rogue DHCP activities.
 
-If any of these are not available remember that GNU/Linux as router is a good solution. As example it could be used with iptables this way:
+If any of these are not available remember that GNU/Linux as router is a good solution. This example could be used with iptables:
 ````
 # 67 server, 68 client
 IPTABLES -I OUTPUT -i $LAN_IFACE -p udp --sport 67 -m mac ! --mac-source $YOUR_DHCP_MAC -j DROP
