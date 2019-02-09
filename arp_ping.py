@@ -18,7 +18,6 @@ def get_mac(ip_addr, interface):
     padstr = '\x00' * (60 - len(eth_hdr) - len(arp_hdr))
     pad = Padding(load=padstr) # a bunch of 0-bytes
     arp_packet = eth_hdr/arp_hdr/pad
-
     # Send ARP packets 5 times until it get correct response
     for i in range(5):
         response = srp1(arp_packet, iface=interface, verbose=0, timeout=5)
@@ -40,6 +39,5 @@ if __name__ == '__main__':
     parser.add_argument('-i', '--interface', type=str, dest='interface', default='wlan0',
                         help='Network interface to use')
     args = parser.parse_args()
-    
     fetched_mac = get_mac(args.ip, args.interface)
     if fetched_mac: print("{} = {}".format(args.ip, fetched_mac ))

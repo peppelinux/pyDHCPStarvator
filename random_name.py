@@ -2,12 +2,10 @@ import random
 import uuid
 letters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-dlenght = {
-            1: 3,
-            2: 6,
-            3: 4,
-            4: 5
-          }
+dlenght = {1: 3,
+           2: 6,
+           3: 4,
+           4: 5}
 
 def random_uid():    
     name = []
@@ -16,11 +14,9 @@ def random_uid():
         name.append(random.choice(letters))
     return ''.join(name)
 
-
 def random_hostname(wordlist='wordlist.txt', sep='-'):
     with open(wordlist, encoding='UTF-8') as wd:
         words = [i.replace('\n', '') for i in wd.readlines()]
-    
     rchoice = random.choice(words)
     u = random_uid()
     if rchoice == 'android':

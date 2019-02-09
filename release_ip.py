@@ -10,7 +10,6 @@ def release_ip(src_mac,
                timeout=0.2,
                debug=0):
     rand_xid=random.randint(1, 900000000)
-    
     dhcp_release = Ether(src=src_mac,dst=dst_mac)\
                    /IP(src=src_ip,dst=dst_ip)\
                    /UDP(sport=68,dport=67)\

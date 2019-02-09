@@ -12,35 +12,30 @@ from arp_ping import get_mac
 
 global _DEBUG, see_all, dhcp_whitelist, starvation_on
 
-
-# it needs a dynamic CIDR diagnosys
+# it need a dynamic CIDR diagnosys
 def starvation_attack(network='192.168.0.1/24', 
                       dst_mac='ff:ff:ff:ff:ff:ff'):
-    
     cmd = ' '.join(['python3', 
                      'starvit.py',
                      '-i {}'.format(conf.iface),
                      '-net {}'.format(network),
-                     '-dst_mac {}'.format(dst_mac),
-                     ])
+                     '-dst_mac {}'.format(dst_mac)])
     print('** '+ cmd)
     proc = subprocess.Popen(cmd,
                              shell=True,
-                             stdout=subprocess.PIPE,
-                            )
+                             stdout=subprocess.PIPE)
 
 def pkt_callback(pkt):
     """
-        dhcp message type:
-            1 : dhcp discover
-            2 : dhcp offer
-            
-            3 : request
-            5 : request ?
-            
-            6 : nak
+    dhcp message type:
+        1 : dhcp discover
+        2 : dhcp offer
         
-        pkt.lastlayer().fields['options'][0] is 'message-type'
+        3 : request
+        5 : request ?
+        
+        6 : nak
+    pkt.lastlayer().fields['options'][0] is 'message-type'
     """
     
     if _DEBUG: 
@@ -50,22 +45,18 @@ def pkt_callback(pkt):
     if pkt.lastlayer().fields['options'][0][1] == 2:
         router_ip = pkt.lastlayer().fields['options'][7][1] 
         print("DHCP OFFER from: {} [{}]".format(router_ip, get_mac(router_ip, conf.iface)))
-        
         target_host = get_mac(router_ip, conf.iface)
         if starvation_on and target_host not in dhcp_whitelist:
             target_net = router_ip+'/24'
             print("starting starvation on {}, {}".format(target_host, target_net))
             starvation_attack(network=target_net, dst_mac=target_host)
-        
     if see_all:
         if pkt.lastlayer().fields['options'][0][1] == 3:
             router_ip = pkt.fields.get('src')
             print ('DHCP REQUEST from %s' % router_ip)
-        
         elif pkt.lastlayer().fields['options'][0][1] == 6:
             router_ip = pkt.lastlayer().fields['options'][1][1] 
             print ("DHCP NAK from: {} [{}]".format(router_ip, get_mac(router_ip, conf.iface)))
-
     
 def listen(iface, pfilter):
     # store argument must be set to 0 for the prn callback to be invoked
@@ -115,5 +106,4 @@ if __name__=="__main__":
     dhcp_whitelist = args.starvation_exclude
     
     listen(args.i,
-           args.pfilter,
-          )
+           args.pfilter)

