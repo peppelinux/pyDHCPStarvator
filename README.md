@@ -175,6 +175,7 @@ DHCPStarvator is made by Giuseppe De Marco and it's released under the GPL 3 lic
 - https://blog.jasonantman.com/2010/04/dhcp-debugging-and-handy-tcpdump-filters/
 - https://www.whitewinterwolf.com/posts/2017/10/30/dhcp-exploitation-guide/
 - https://github.com/foreni-packages/dhcpig
+- https://github.com/skids/ebtables-dhcpsnooping
 
 ### Special thanks
 To [Daniele Albrizio](https://github.com/speedj) for given a name to an idea ;)
