@@ -6,7 +6,7 @@ pyDHCPStarvator was not created for doing network attacks but like a way to exau
 ### Requirements
 ````
 apt install python3-dev python3-pip
-pip3 install scapy-python3
+pip3 install scapy
 pip3 install netaddr
 ````
 It was migrated from python2 to python3, if you need a runnable python2 version you can use the branch named **python2**.
@@ -71,7 +71,7 @@ Wed May 16 17:31:35 2018 daemon.info dnsmasq-dhcp[31796]: DHCPNAK(br-lan) 192.16
 ### Request an IP release
 Usefull if you want to force a DHCP server to remove a DHCP lease and then make a client to request an ip again
 ````
-python release_ip.py -src_mac 66:36:3a:37:31:3a -src_ip 192.168.1.93 -dst_mac 08:00:27:7C:F9:41 -dst_ip 192.168.1.1 -debug 1
+python3 release_ip.py -src_mac 66:36:3a:37:31:3a -src_ip 192.168.1.93 -dst_mac 08:00:27:7C:F9:41 -dst_ip 192.168.1.1 -debug 1
 
 ````
 
@@ -81,10 +81,10 @@ For example we could send a gratuitous DHCP DISCOVER and listen for DHCP OFFER f
 
 ````
 # DHCP DISCOVER
-python2 dhcp_discover.py -i eth2
+python3 dhcp_discover.py -i eth2
 
 # DHCP event listener
-python listener.py -i eth2 [-debug]
+python3 listener.py -i eth2 [-debug]
 
 Start DHCP listener on interface 'eth2' with filter 'port 68 and port 67'
 DHCP OFFER from: 10.21.0.254 [d4:ca:6d:e6:6a:d7]

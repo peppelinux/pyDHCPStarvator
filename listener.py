@@ -37,7 +37,6 @@ def pkt_callback(pkt):
         6 : nak
     pkt.lastlayer().fields['options'][0] is 'message-type'
     """
-    
     if _DEBUG: 
         pkt.show() # debug statement
         print(pkt.lastlayer().fields['options'])
