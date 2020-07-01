@@ -10,7 +10,19 @@ from scapy.all import *
 
 bcast_mac = 'ff:ff:ff:ff:ff:ff'
 
-def get_mac(ip_addr, interface):
+
+def get_mac(ip, interface, broadcast_mac=bcast_mac):
+    result = ''
+    arp_request = Ether(src=get_if_hwaddr(interface),dst=broadcast_mac)/ARP(pdst=ip)
+    ans, unans = srp(arp_request, timeout=2, iface=interface, verbose=False)
+    if ans:
+        first_response = ans[0]
+        req, res = first_response
+        result = res.getlayer(Ether).src
+    return result
+
+
+def get_mac_alt(ip_addr, interface):
     # arp_packet creation
     interface_mac = get_if_hwaddr(interface)
     eth_hdr = Ether(src=interface_mac, dst=bcast_mac, type=0x0806) # Ethernet header (Broadcast ethernet)
